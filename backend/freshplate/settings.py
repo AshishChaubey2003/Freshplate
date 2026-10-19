@@ -244,6 +244,8 @@ LOGGING = {
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 GEMINI_TIMEOUT_MS = int(os.getenv("GEMINI_TIMEOUT_MS", "30000"))
+# Thinking models count internal reasoning against this limit; 800 cut replies off
+GEMINI_MAX_OUTPUT_TOKENS = int(os.getenv("GEMINI_MAX_OUTPUT_TOKENS", "4096"))
 CHATBOT_HISTORY_LIMIT = int(os.getenv("CHATBOT_HISTORY_LIMIT", "20"))
 CHATBOT_MAX_MESSAGE_LENGTH = int(os.getenv("CHATBOT_MAX_MESSAGE_LENGTH", "1000"))
 

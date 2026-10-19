@@ -107,7 +107,7 @@ def generate_reply(user, history):
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
                 temperature=0.6,
-                max_output_tokens=800,
+                max_output_tokens=settings.GEMINI_MAX_OUTPUT_TOKENS,
             ),
         )
     except errors.APIError as exc:
@@ -117,6 +117,10 @@ def generate_reply(user, history):
         logger.exception("Unexpected error calling Gemini")
         raise ChatbotUnavailable(str(exc)) from exc
 
+    candidate = response.candidates[0] if response and response.candidates else None
+    if candidate is not None and str(getattr(candidate, "finish_reason", "")).endswith("MAX_TOKENS"):
+        logger.warning("Gemini reply hit max_output_tokens=%s (model=%s); it may be cut off",
+                       settings.GEMINI_MAX_OUTPUT_TOKENS, settings.GEMINI_MODEL)
     text = (response.text or "").strip() if response else ""
     if not text:
         raise ChatbotSafetyBlocked()
